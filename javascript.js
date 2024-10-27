@@ -15,9 +15,15 @@ function getComputerChoice() {
 // prompt the user for their choice
 function getHumanChoice() {
     let choice = prompt("Please enter 'rock', 'paper' or 'scissors'");
+    if(choice != null){
+        choice = choice.toLowerCase();
+    }
     
     while(choice != 'rock' && choice != 'paper' && choice != 'scissors' && choice != null){
         choice = prompt(choice + " is an unknown entry. Please enter 'rock', 'paper' or 'scissors'");
+        if(choice != null){
+            choice = choice.toLowerCase();
+        }  
     }
 
     return choice;
@@ -29,6 +35,7 @@ function playRound(humanChoice, computerChoice) {
     console.log("You have chosen " + humanChoice);
     
     if(humanChoice == null) {
+        console.log("You have lost!");
         return "computer";
     }
 
