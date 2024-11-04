@@ -4,8 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        * {
+            margin: 0px;
+        }
+
+        body {
+            padding: 15px;
+        }
+
+        h2, h4 {
+            margin-bottom: 10px;
+        }
+
+        .scoreHeader {
+            margin-top: 20px;
+            margin-bottom: 0px;
+        }
+
+        p {
+            margin-bottom: 5px;
+        }
+
+    </style>
 </head>
 <body>
+    <h2>Rock, Paper, Scissors!</h3>
+    <h4>Please make your selection:</h6>
+    <button>rock</button>
+    <button>paper</button>
+    <button>scissors</button>
+
+    <h4 class="scoreHeader">Score</h6>
+    <div class="outputMessages">
+        <p id="scores">
+            <span id="humanScore">Human: 0 </span>
+            <span id="computerScore">Computer: 0</span>
+        </p>
+    </div>
     <script src="javascript.js"></script>
 </body>
 </html>

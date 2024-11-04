@@ -1,3 +1,15 @@
+let round = 1;
+let humanWins = 0;
+let computerWins = 0;
+
+// event listers for user input buttons
+const buttons = document.querySelectorAll("button");
+buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+        playRound(button.textContent, getComputerChoice());
+    });
+});
+
 // randomly generate the computer choice
 function getComputerChoice() {
     let rand = Math.floor(Math.random() * 3) + 1;
@@ -12,110 +24,107 @@ function getComputerChoice() {
     }
 }
 
-// prompt the user for their choice
-function getHumanChoice() {
-    let choice = prompt("Please enter 'rock', 'paper' or 'scissors'");
-    if(choice != null){
-        choice = choice.toLowerCase();
-    }
-    
-    while(choice != 'rock' && choice != 'paper' && choice != 'scissors' && choice != null){
-        choice = prompt(choice + " is an unknown entry. Please enter 'rock', 'paper' or 'scissors'");
-        if(choice != null){
-            choice = choice.toLowerCase();
-        }  
-    }
-
-    return choice;
-}
-
-// logic for one round of rock paper scissors
+// main game logic including playing a round and checking the win condition
 function playRound(humanChoice, computerChoice) {
-    console.log("Computer has chosen " + computerChoice);
-    console.log("You have chosen " + humanChoice);
+    let humanScore = document.querySelector("#humanScore");
+    let computerScore = document.querySelector("#computerScore");
+    let whoWon = '';
+
+    let messageDiv = document.querySelector(".outputMessages");
+    let newMessage = document.createElement("p");
+    newMessage.textContent = "Round " + round + ". You chose " + humanChoice + ", computer chose " + computerChoice + ". ";
     
     if(humanChoice == null) {
-        console.log("You have lost!");
-        return "computer";
+        whoWon = "computer";
     }
-
-    if(computerChoice == 'rock') {
-        if(humanChoice == 'rock') {
-            console.log("You have tied!");
-            return "tie";
-        }
-        else if (humanChoice == 'paper') {
-            console.log("You have won!");
-            return "human";
+    else if(computerChoice == 'rock') {
+        if (humanChoice == 'paper') {
+            whoWon = "human";
         }
         else if (humanChoice == 'scissors') {
-            console.log("You have lost!");
-            return "computer";
+            whoWon = "computer";
         }
     }
     else if (computerChoice == 'paper') {
         if(humanChoice == 'rock') {
-            console.log("You have lost!");
-            return "computer";
-        }
-        else if (humanChoice == 'paper') {
-            console.log("You have tied!");
-            return "tie";
+            whoWon = "computer";
         }
         else if (humanChoice == 'scissors') {
-            console.log("You have won!");
-            return "human";
+            whoWon = "human";
         }
     }
     else if (computerChoice == 'scissors') {
         if(humanChoice == 'rock') {
-            console.log("You have won!");
-            return "human";
+            whoWon = "human";
         }
         else if (humanChoice == 'paper') {
-            console.log("You have lost!");
-            return "computer";
+            whoWon = "computer";
         }
-        else if (humanChoice == 'scissors') {
-            console.log("You have tied!");
-            return "tie";
+    }
+
+
+    if(whoWon == "human") {
+        newMessage.textContent += "You have won!";
+        humanWins++;
+        humanScore.textContent = "Human: " + humanWins;
+    }
+    else if(whoWon == "computer") {
+        newMessage.textContent += "You have lost!";
+        computerWins++;
+        computerScore.textContent = "Computer: " + computerWins;
+    }
+    else {
+        newMessage.textContent += "You have tied!";
+    }
+
+    messageDiv.appendChild(newMessage);
+    round++;
+    whoWon = '';
+
+    // game conclusion
+    if(humanWins == 5 || computerWins == 5) {
+        let endMessage = document.createElement("h4");
+
+        if(humanWins == 5) {
+            endMessage.textContent = "Congratulations, you won the game!";
         }
+        else if (computerWins == 5) {
+            endMessage.textContent = "Oh no, you lost the game!"; 
+        }
+
+        messageDiv.appendChild(endMessage);
+
+        let resetButton = document.createElement("button");
+        resetButton.textContent = "Reset Game";
+        resetButton.addEventListener("click", () => {
+            resetGame();
+        });
+
+        messageDiv.appendChild(resetButton);
+
+        buttons.forEach((button) => {
+            button.disabled = true;
+        });
     }
 }
 
-// main game function
-function playGame() {
-    let humanScore = 0;
-    let computerScore = 0;
+function resetGame() {
+    round = 1;
+    humanWins = 0;
+    computerWins = 0;
 
-    // main loop for 5 rounds of rock paper scissors
-    for(let i = 1; i <= 5; i++) {
-        console.log("Round " + i + " / 5");
-        
-        let roundWinner = playRound(getHumanChoice(), getComputerChoice());
+    let messageDiv = document.querySelector(".outputMessages");
+    let humanScore = document.querySelector("#humanScore");
+    let computerScore = document.querySelector("#computerScore");
 
-        if (roundWinner == "human") {
-            humanScore++;
-        }
-        else if (roundWinner == "computer") {
-            computerScore++;
-        }
+    humanScore.textContent = "Human: 0";
+    computerScore.textContent = "Computer: 0";
 
-        console.log("Score: Human " + humanScore + ", Computer " + computerScore);
-        console.log("");
+    while(messageDiv.children.length > 1) {
+        messageDiv.lastChild.remove();
     }
 
-    // game conclusion message
-    if(humanScore > computerScore) {
-        console.log("Congratulations, you won the game!");
-    }
-    else if (humanScore < computerScore) {
-        console.log("Oh no, you lost the game!");
-    }
-    else if (humanScore == computerScore) {
-        console.log("You tied the game with the computer!");
-    }
+    buttons.forEach((button) => {
+        button.disabled = false;
+    });
 }
-
-// main fuction call
-playGame();
